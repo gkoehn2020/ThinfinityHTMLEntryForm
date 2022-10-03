@@ -102,7 +102,7 @@
             <Form>UIMain</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="untSysWebComponentProgressIndicator.pas"/>
+        <DCCReference Include="untSysWebComponentEntryForm.pas"/>
         <DCCReference Include="frmUISecondOne.pas">
             <Form>SecondForm</Form>
             <FormType>dfm</FormType>

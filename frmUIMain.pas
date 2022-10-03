@@ -47,15 +47,15 @@ var
   I: Integer;
   lTop: integer;
 begin
-  lTop := 10;
+  lTop := 5;
   SecondForm.ShowWebForm;
-  for I := 1 to lTop do
-    begin
-      SecondForm.UpdateMsg('Processing item ' + inttostr(I) + ' of ' + inttostr(lTop));
-      sleep(1000);
-    end;
-  SecondForm.StopProgress;
-  SecondForm.close;
+//  for I := 1 to lTop do
+//    begin
+//      SecondForm.UpdateMsg('Processing item ' + inttostr(I) + ' of ' + inttostr(lTop));
+//      sleep(1000);
+//    end;
+//  SecondForm.StopProgress;
+//  SecondForm.close;
 end;
 
 end.

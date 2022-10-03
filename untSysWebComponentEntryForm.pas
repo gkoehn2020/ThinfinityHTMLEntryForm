@@ -1,4 +1,4 @@
-unit untSysWebComponentProgressIndicator;
+unit untSysWebComponentEntryForm;
 
 interface
 

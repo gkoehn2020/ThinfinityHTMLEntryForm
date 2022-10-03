@@ -32,20 +32,7 @@ const componentOneStyle = `@charset "utf-8";
   text-align: center;
   color: white;
 }
-
-.spinning-box {
-  background: #FFFFFF;
-  width: 30px;
-  height: 30px;
-  margin: auto;
-  border-radius: 4px;
-  animation: rotate 3s linear infinite;
-}
-
-@keyframes rotate {
-  from { transform: rotate(0deg);	}
-  to { transform: rotate(359deg); }
-}`;
+`;
 
 const addCSS = codeToAdd => document.head.appendChild(document.createElement("style")).innerHTML = codeToAdd;
 addCSS(componentOneStyle);
@@ -53,8 +40,20 @@ addCSS(componentOneStyle);
 xtag.register('x-entryform1', {
   content: `<div class="loading-overlay orion-working-hidden"></div>
             <div class="loading-overlay-img-container orion-working-hidden">
-                <div class="spinning-box"></div>
-                <p id="orion-working-msg">Loading...</p>
+              <!-- The Modal -->
+              <div id="orModal" class="ormodal">
+                <!-- Modal content -->
+                <div class="ormodal-content">
+                  <p>Orion Dictation Entry</p>
+                  <textarea id="orNarrative" name="orNarrative" rows="20" cols="100" class="orNarrative"></textarea> 
+                  <div>
+                    <i class="pointer fa fa-2xs fa-microphone-slash" id="mic"></i>
+                    <button id="orBtnCancel" type="button" class="btncancel" onclick="cancelDialogBtnClick()">Cancel</button>
+                    <button class="btnsave">Save</button>
+                  </div>
+                </div>
+              </div>                
+              <p id="orion-working-msg">Loading...</p>
             </div>`,
   lifecycle: {
     created  : function(){ 
@@ -76,6 +75,13 @@ xtag.register('x-entryform1', {
   events    : {}
 });
 
+function cancelDialogBtnClick() {
+    const div =  document.querySelector('.loading-overlay');
+    div.classList.add('orion-working-hidden');
+    const div2 =  document.querySelector('.loading-overlay-img-container');
+    div2.classList.add('orion-working-hidden');    
+};
+              
 function startJsRO(controlId) {
   jsro = new Thinfinity.JsRO();
 

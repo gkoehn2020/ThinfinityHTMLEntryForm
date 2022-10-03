@@ -4,7 +4,7 @@ uses
   VirtualUI_Autorun,
   Vcl.Forms,
   frmUIMain in 'frmUIMain.pas' {UIMain},
-  untSysWebComponentProgressIndicator in 'untSysWebComponentProgressIndicator.pas',
+  untSysWebComponentEntryForm in 'untSysWebComponentEntryForm.pas',
   frmUISecondOne in 'frmUISecondOne.pas' {SecondForm};
 
 {$R *.res}
