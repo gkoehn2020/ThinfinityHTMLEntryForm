@@ -13,6 +13,7 @@ type
   private
     FRemoteObj: TJSObject;
     FXtagDir: string;
+    FOnFormCloseClickedEvent: TNotifyEvent;
     function GetXTagDir: string;
     function GetHtmlDir: string;
   public
@@ -20,6 +21,7 @@ type
     destructor Destroy; override;
     procedure CreateWebComponent(aControl: TWinControl);
     property  XTagDir: string read FXtagDir write FXTagDir;
+    property OnFormCloseClickedEvent: TNotifyEvent read FOnFormCloseClickedEvent write FOnFormCloseClickedEvent;
     procedure Start;
     procedure Stop;
     procedure PushMsg(aMsg: string);
@@ -30,6 +32,7 @@ implementation
 uses
   System.SysUtils
 , System.IOUtils
+, Vcl.Dialogs
   ;
 
 { TWebEntryForm }
@@ -57,6 +60,21 @@ begin
   FRemoteObj.Events.Add('start');
   FRemoteObj.Events.Add('stop');
   FRemoteObj.Events.Add('msgupdate').AddArgument('newmsg',JSDT_STRING);
+
+  FRemoteObj.Methods.Add('multiply') // Returns a IJSMethod
+    .AddArgument('a', JSDT_FLOAT) // First value to multiply
+    .AddArgument('b', JSDT_FLOAT) // Second value to multiply
+    .OnCall(TJSCallback.Create( // Adds the callback
+      procedure(const Parent: IJSObject; const Method: IJSMethod)
+      var
+       a, b: double;
+      begin
+        a := Method.Arguments['a'].AsFloat;
+        b := Method.Arguments['b'].AsFloat;
+        Method.ReturnValue.AsFloat := a * b;
+       end))
+   .ReturnValue.DataType := JSDT_FLOAT; // Sets the return type
+
   FRemoteObj.ApplyModel;
 
   VirtualUI.HTMLDoc.CreateComponent(AControl.Name, 'x-entryform1', AControl.Handle);

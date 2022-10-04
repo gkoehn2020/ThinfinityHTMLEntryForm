@@ -19,6 +19,7 @@ type
     procedure ShowWebForm;
     procedure UpdateMsg(aMsg: string);
     procedure StopProgress;
+    procedure OnCloseAction(Sender: TObject);
   end;
 
 var
@@ -34,6 +35,12 @@ begin
   self.TransparentColorValue := self.Color;
   FWebComponent := TWebEntryForm.Create(pnlOneHost);
   FWebComponent.CreateWebComponent(pnlOneHost);
+  FWebComponent.OnFormCloseClickedEvent := OnCloseAction;
+end;
+
+procedure TSecondForm.OnCloseAction(Sender: TObject);
+begin
+  self.close;
 end;
 
 procedure TSecondForm.ShowWebForm;

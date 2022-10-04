@@ -1,4 +1,3 @@
-var jsro = null;
 
 const componentOneStyle = `@charset "utf-8";
 .loading-overlay {
@@ -44,13 +43,18 @@ xtag.register('x-entryform1', {
               <div id="orModal" class="ormodal">
                 <!-- Modal content -->
                 <div class="ormodal-content">
-                  <p>Orion Dictation Entry</p>
-                  <textarea id="orNarrative" name="orNarrative" rows="20" cols="100" class="orNarrative"></textarea> 
-                  <div>
-                    <i class="pointer fa fa-2xs fa-microphone-slash" id="mic"></i>
-                    <button id="orBtnCancel" type="button" class="btncancel" onclick="cancelDialogBtnClick()">Cancel</button>
-                    <button class="btnsave">Save</button>
-                  </div>
+                   
+                  <form id="form">
+                
+                    <p>Orion Dictation Entry</p>
+                    <textarea id="orNarrative" name="orNarrative" rows="20" cols="100" class="orNarrative"></textarea> 
+                    <div>
+                      <i class="pointer fa fa-2xs fa-microphone-slash" id="mic"></i>
+                      <button id="orBtnCancel" type="button" class="btncancel">Cancel</button>
+                      <button class="btnsave">Save</button>
+                    </div>
+                  
+                  </form>
                 </div>
               </div>                
               <p id="orion-working-msg">Loading...</p>
@@ -61,7 +65,45 @@ xtag.register('x-entryform1', {
     },
     inserted : function(){ 
       /* Called when the custom element is inserted into the DOM */ 
-      startJsRO(this.id);            
+      var _controlID = this.id;
+
+      jsro = new Thinfinity.JsRO();
+      jsro.on('model:' + _controlID, 'created', function (obj) {
+          ro = jsro.model[_controlID];
+      });
+      
+      jsro.on(this.id, "start", function () {
+        const div =  document.querySelector('.loading-overlay');
+        div.classList.remove('orion-working-hidden');
+        const div2 =  document.querySelector('.loading-overlay-img-container');
+        div2.classList.remove('orion-working-hidden');     
+        console.trace('start');
+      });
+
+      jsro.on(this.id, "stop", function () {
+        const div =  document.querySelector('.loading-overlay');
+        div.classList.add('orion-working-hidden');
+        const div2 =  document.querySelector('.loading-overlay-img-container');
+        div2.classList.add('orion-working-hidden');           
+      });
+
+      jsro.on(this.id, "msgupdate", function (value) {
+        console.trace('msgupdate');
+        const element =  document.querySelector('#orion-working-msg');
+        element.innerText = value;
+      });  
+     
+      document.getElementById("orBtnCancel").onclick = function() {
+        alert('hi');
+        const div =  document.querySelector('.loading-overlay');
+        div.classList.add('orion-working-hidden');
+        const div2 =  document.querySelector('.loading-overlay-img-container');
+        div2.classList.add('orion-working-hidden');
+        ro.multiply(3, 4, function (result) {
+          alert("Result is " + result);  
+        });
+      };   
+      
     },
     removed  : function(){ 
       /* Called when the custom element is removed from the DOM */ 
@@ -75,35 +117,3 @@ xtag.register('x-entryform1', {
   events    : {}
 });
 
-function cancelDialogBtnClick() {
-    const div =  document.querySelector('.loading-overlay');
-    div.classList.add('orion-working-hidden');
-    const div2 =  document.querySelector('.loading-overlay-img-container');
-    div2.classList.add('orion-working-hidden');    
-};
-              
-function startJsRO(controlId) {
-  jsro = new Thinfinity.JsRO();
-
-  jsro.on(controlId, "start", function () {
-    const div =  document.querySelector('.loading-overlay');
-    div.classList.remove('orion-working-hidden');
-    const div2 =  document.querySelector('.loading-overlay-img-container');
-    div2.classList.remove('orion-working-hidden');     
-    console.trace('start');
-  });
-
-
-  jsro.on(controlId, "stop", function () {
-    const div =  document.querySelector('.loading-overlay');
-    div.classList.add('orion-working-hidden');
-    const div2 =  document.querySelector('.loading-overlay-img-container');
-    div2.classList.add('orion-working-hidden');           
-  });
-
-  jsro.on(controlId, "msgupdate", function (value) {
-    console.trace('msgupdate');
-    const element =  document.querySelector('#orion-working-msg');
-    element.innerText = value;
-  });  
-};
