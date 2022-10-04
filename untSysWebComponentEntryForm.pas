@@ -22,9 +22,7 @@ type
     procedure CreateWebComponent(aControl: TWinControl);
     property  XTagDir: string read FXtagDir write FXTagDir;
     property OnFormCloseClickedEvent: TNotifyEvent read FOnFormCloseClickedEvent write FOnFormCloseClickedEvent;
-    procedure Start;
-    procedure Stop;
-    procedure PushMsg(aMsg: string);
+    procedure ShowThisModal;
   end;
 
 implementation
@@ -57,23 +55,14 @@ begin
   VirtualUI.HTMLDoc.ImportHTML('/HtmlToAdd/HTMLEntryForm.html','');
 
   FRemoteObj := TJSObject.Create(AControl.Name);
-  FRemoteObj.Events.Add('start');
-  FRemoteObj.Events.Add('stop');
-  FRemoteObj.Events.Add('msgupdate').AddArgument('newmsg',JSDT_STRING);
-
-  FRemoteObj.Methods.Add('multiply') // Returns a IJSMethod
-    .AddArgument('a', JSDT_FLOAT) // First value to multiply
-    .AddArgument('b', JSDT_FLOAT) // Second value to multiply
+  FRemoteObj.Events.Add('ShowThisModal');
+  FRemoteObj.Methods.Add('orCancel') // Returns a IJSMethod
     .OnCall(TJSCallback.Create( // Adds the callback
       procedure(const Parent: IJSObject; const Method: IJSMethod)
-      var
-       a, b: double;
       begin
-        a := Method.Arguments['a'].AsFloat;
-        b := Method.Arguments['b'].AsFloat;
-        Method.ReturnValue.AsFloat := a * b;
-       end))
-   .ReturnValue.DataType := JSDT_FLOAT; // Sets the return type
+        if assigned(OnFormCloseClickedEvent) then
+          OnFormCloseClickedEvent(nil);
+       end));
 
   FRemoteObj.ApplyModel;
 
@@ -128,19 +117,9 @@ begin
     end;
 end;
 
-procedure TWebEntryForm.PushMsg(aMsg: string);
+procedure TWebEntryForm.ShowThisModal;
 begin
-  FRemoteObj.Events['msgupdate'].ArgumentAsString('newmsg',aMsg).Fire;
-end;
-
-procedure TWebEntryForm.Start;
-begin
-  FRemoteObj.Events['start'].Fire;
-end;
-
-procedure TWebEntryForm.Stop;
-begin
-  FRemoteObj.Events['stop'].Fire;
+  FRemoteObj.Events['ShowThisModal'].Fire;
 end;
 
 end.

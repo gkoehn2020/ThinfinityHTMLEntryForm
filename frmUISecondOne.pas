@@ -17,8 +17,6 @@ type
   public
     { Public declarations }
     procedure ShowWebForm;
-    procedure UpdateMsg(aMsg: string);
-    procedure StopProgress;
     procedure OnCloseAction(Sender: TObject);
   end;
 
@@ -47,17 +45,7 @@ procedure TSecondForm.ShowWebForm;
 begin
   Self.BringToFront;
   Application.ProcessMessages;
-  FWebComponent.Start;
-end;
-
-procedure TSecondForm.StopProgress;
-begin
-  FWebComponent.Stop;
-end;
-
-procedure TSecondForm.UpdateMsg(aMsg: string);
-begin
-  FWebComponent.PushMsg(aMsg);
+  FWebComponent.ShowThisModal;
 end;
 
 end.

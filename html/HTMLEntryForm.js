@@ -57,7 +57,6 @@ xtag.register('x-entryform1', {
                   </form>
                 </div>
               </div>                
-              <p id="orion-working-msg">Loading...</p>
             </div>`,
   lifecycle: {
     created  : function(){ 
@@ -72,7 +71,7 @@ xtag.register('x-entryform1', {
           ro = jsro.model[_controlID];
       });
       
-      jsro.on(this.id, "start", function () {
+      jsro.on(_controlID, "ShowThisModal", function () {
         const div =  document.querySelector('.loading-overlay');
         div.classList.remove('orion-working-hidden');
         const div2 =  document.querySelector('.loading-overlay-img-container');
@@ -80,28 +79,12 @@ xtag.register('x-entryform1', {
         console.trace('start');
       });
 
-      jsro.on(this.id, "stop", function () {
-        const div =  document.querySelector('.loading-overlay');
-        div.classList.add('orion-working-hidden');
-        const div2 =  document.querySelector('.loading-overlay-img-container');
-        div2.classList.add('orion-working-hidden');           
-      });
-
-      jsro.on(this.id, "msgupdate", function (value) {
-        console.trace('msgupdate');
-        const element =  document.querySelector('#orion-working-msg');
-        element.innerText = value;
-      });  
-     
       document.getElementById("orBtnCancel").onclick = function() {
-        alert('hi');
         const div =  document.querySelector('.loading-overlay');
         div.classList.add('orion-working-hidden');
         const div2 =  document.querySelector('.loading-overlay-img-container');
         div2.classList.add('orion-working-hidden');
-        ro.multiply(3, 4, function (result) {
-          alert("Result is " + result);  
-        });
+        ro.orCancel();
       };   
       
     },
